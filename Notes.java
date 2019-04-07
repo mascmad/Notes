@@ -21,6 +21,7 @@ public class NotesEx {
 	private static final String sep = "---------------";
 
 	public static void main(String args[]) {
+
 		if (c == null) {
 			System.err.println("ERROR: Console not found.");
 			return;
@@ -28,7 +29,7 @@ public class NotesEx {
 			if (dbg)
 				c.printf("[i] Console found, continuing.\n");
 		}
-		
+
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("-l")) {			// list
 				listNotes();
@@ -349,7 +350,7 @@ public class NotesEx {
 		scan.close();
 		c.flush();
 	}
-	
+
 	private static void space() {
 		c.printf("%s", "");
 	}
@@ -383,4 +384,3 @@ public class NotesEx {
 		}
 	}
 }
-
