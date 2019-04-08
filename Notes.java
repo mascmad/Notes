@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 
-public class NotesEx {
+public class Notes {
 
 	private static final String usr = System.getenv("USER");
 
