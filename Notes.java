@@ -283,6 +283,7 @@ public class Notes {
 			try {
 				if (debug || firstRun)
 					c.printf("[i] Created path to file.\n");
+				// creates the path to the file, but not the file itself
 				Process mkdir = Runtime.getRuntime().exec("mkdir -p " + notesPath);
 			} catch (IOException e) {
 				c.printf("[!!] Error in creating path.\n");
