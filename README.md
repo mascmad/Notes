@@ -11,13 +11,10 @@ Or, it can be ran with one of four arguments, which will run then quit:
 
 Any other argument will cause the program to return with an error message.
 
-<<<<<<< HEAD
 The file the notes are stored in (notes.txt) is stored in plaintext in the ~/.notes folder.
 
 When adding a note, the actual note itself is typed first, followed by a prompt for a title.
 
-=======
 The file the notes are stored in (notes.txt) is stored in plaintext in the ~/Documents folder.
 
 When adding a note, the actual note itself is typed first, followed by a prompt for a title.
->>>>>>> branch 'master' of https://github.com/mascmad/Notes.git
