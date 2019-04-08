@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -7,8 +9,10 @@ public class Notes {
 
 	private static final String usr = System.getenv("USER");
 
-	private static final String notesFile = "/home/" + usr + "/Documents/notes.txt";
-	private static final File f = new File(notesFile);
+	private static final String notesFile = "notes.txt";
+	private static final String notesPath = "/home/" + usr + "/.notes/";
+	private static final String wholePath = notesPath + notesFile;
+	private static final File f = new File(wholePath);
 	private static final boolean dbg = false;
 	private static boolean loaded = false;
 	private static boolean firstRun = true;
@@ -109,9 +113,9 @@ public class Notes {
 				loadNotesFile();
 				noteArray.clear();
 				try {
-					String removeCommand = "rm " + notesFile;
+					String removeCommand = "rm " + wholePath;
 					if (!quiet)
-						removeCommand += " && rm " + notesFile + ".bak";
+						removeCommand += " && rm ." + wholePath + ".bak";
 					Process rm = Runtime.getRuntime().exec(removeCommand);
 					loaded = false;
 					if (!(usableFile(f, (quiet ? false : dbg))))
@@ -164,7 +168,7 @@ public class Notes {
 					if (noteArray.size() == 0) {
 						purgeNotes(true);
 					}
-					Process cp = Runtime.getRuntime().exec("cp " + notesFile + " " + notesFile + ".bak"); // create the backup
+					Process cp = Runtime.getRuntime().exec("cp " + wholePath + " ." + wholePath + ".bak"); // create the backup
 					int i = 0;
 					for (Note n: noteArray) {
 						if (i == 0) {
@@ -275,11 +279,22 @@ public class Notes {
 	}
 
 	public static boolean usableFile(File in, boolean debug) { 
+		if (Files.notExists(in.toPath(), LinkOption.NOFOLLOW_LINKS)) {
+			try {
+				if (debug || firstRun)
+					c.printf("[i] Created path to file.\n");
+				Process mkdir = Runtime.getRuntime().exec("mkdir -p " + notesPath);
+			} catch (IOException e) {
+				c.printf("[!!] Error in creating path.\n");
+				return false;
+			}
+		}
+		
 		if (!(in.exists())) {
 			if (debug)
 				c.printf("[!!] File does not exist.\n");
 			try {
-				if (f.createNewFile()) {
+				if (in.createNewFile()) {
 					if (debug || firstRun)
 						c.printf("[i] File created.\n");
 				} else {
@@ -294,14 +309,14 @@ public class Notes {
 		if (!(in.canWrite()) || !(in.canRead())) {
 			c.printf("[!!] File permissions not set.\n");
 			try {
-				if (f.setReadable(true, true)) {
+				if (in.setReadable(true, true)) {
 					if (debug || firstRun)
 						c.printf("[i] Set read permissions...\n");
 				} else {
 					c.printf("[!!] Could not set read permissions.\n");
 				}
 
-				if (f.setWritable(true, true)) {
+				if (in.setWritable(true, true)) {
 					if (debug || firstRun)
 						c.printf("[i] Set write permissions...\n");
 				} else {
