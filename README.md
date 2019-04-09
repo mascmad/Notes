@@ -8,6 +8,7 @@ Or, it can be ran with one of four arguments, which will run then quit:
   * -l    List all notes
   * -d    Delete a note
   * -p    Purge all notes
+  * -h    Shows the help menu
 
 Any other argument will cause the program to return with an error message.
 

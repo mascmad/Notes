@@ -43,8 +43,11 @@ public class Notes {
 				deleteNote();
 			} else if (args[0].equalsIgnoreCase("-p")) {	// purge
 				purgeNotes(false);
+			} else if (args[0].equalsIgnoreCase("-h")) {
+				listHelp(false);
 			} else {
 				c.printf("Invalid answer.\n");
+				listHelp(true);
 			}
 			return;
 		}
@@ -151,7 +154,8 @@ public class Notes {
 				int choice = Integer.valueOf(c.readLine("Which to delete?\n> ")) - 1;
 				Note deletion = noteArray.get(choice);
 				String lookup = deletion.getTitle() + ":" + deletion.getContent();// + "\n";
-				c.printf("\nRemove note:\n%s:%s\nat index: %d\n", deletion.getTitle(), deletion.getContent(), noteArray.indexOf(deletion));
+				c.printf("\nRemove note:\n%s:%s\nat index: %d\n", 
+						deletion.getTitle(), deletion.getContent(), noteArray.indexOf(deletion));
 				space();
 				// begin looking for that string in notes.txt
 				BufferedReader inStream = null;
@@ -168,13 +172,16 @@ public class Notes {
 					if (noteArray.size() == 0) {
 						purgeNotes(true);
 					}
-					Process cp = Runtime.getRuntime().exec("cp " + wholePath + " ." + wholePath + ".bak"); // create the backup
+					Process cp = Runtime.getRuntime().exec("cp " + wholePath 
+							+ " ." + wholePath + ".bak"); // create the backup
 					int i = 0;
 					for (Note n: noteArray) {
 						if (i == 0) {
-							printToFile(f, false, n); // the first iteration should not append the file, thus wiping it
+							 // the first iteration should not append the file, thus wiping it
+							printToFile(f, false, n);
 						} else {
-							printToFile(f, true, n); // the subsequent iterations SHOULD append, adding data to the file
+							 // the subsequent iterations SHOULD append, adding data to the file
+							printToFile(f, true, n);
 						}
 						i++;
 					}
@@ -234,14 +241,27 @@ public class Notes {
 			space();
 		}
 	}
+	
+	public static void listHelp(boolean usage) {
+		String msg = (usage ? "Usage" : "Help");
+		space();
+		c.printf(msg + ":\n\n"
+				+ "  -a\tAdd a note\n"
+				+ "  -l\tList notes\n"
+				+ "  -d\tDelete a note\n"
+				+ "  -p\tPurge notes\n"
+				+ "  -h\tShow this help menu\n"
+				+ "\n"
+				+ "All of these options can be used either capitalized or lowercase.\n\n");
+	}
 
 	public static int listMenu() {
 		int answer;
 		c.printf("Menu:\n"
-				+ "1.\tList all notes\n"
-				+ "2.\tAdd a note\n"
-				+ "3.\tDelete a note\n"
-				+ "4.\tPurge notes\n"
+				+ "1.\tList all notes (-l)\n"
+				+ "2.\tAdd a note (-a)\n"
+				+ "3.\tDelete a note (-d)\n"
+				+ "4.\tPurge notes (-p)\n"
 				+ "0.\tExit\n");
 		try {
 			c.printf("> ");
@@ -283,7 +303,6 @@ public class Notes {
 			try {
 				if (debug || firstRun)
 					c.printf("[i] Created path to file.\n");
-				// creates the path to the file, but not the file itself
 				Process mkdir = Runtime.getRuntime().exec("mkdir -p " + notesPath);
 			} catch (IOException e) {
 				c.printf("[!!] Error in creating path.\n");
@@ -368,7 +387,7 @@ public class Notes {
 	}
 
 	private static void space() {
-		c.printf("%s", "");
+		c.printf("%s", "\n");
 	}
 
 	public static class Note {
